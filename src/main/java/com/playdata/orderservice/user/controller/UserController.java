@@ -1,5 +1,6 @@
 package com.playdata.orderservice.user.controller;
 
+import com.playdata.orderservice.common.dto.CommonResDto;
 import com.playdata.orderservice.user.dto.UserSaveReqDto;
 import com.playdata.orderservice.user.entity.User;
 import com.playdata.orderservice.user.service.UserService;
@@ -40,15 +41,18 @@ public class UserController {
         // 혹시 이메일이 중복되었는가? -> 이미 이전에 회원가입을 한 회원이라면 거절.
         // dto를 DB에 바로 때려? -> dto를 entity로 바꾸는 로직 추가.
 
-        try {
-            User saved = userService.userCreate(dto);
-            return new ResponseEntity<>(saved, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
 
+        User saved = userService.userCreate(dto);
         // ResponseEntity는 응답을 줄 때 다양한 정보를 한번에 포장해서 넘길 수 있습니다.
         // 요청에 따른 응답 상태 코드, 응답 헤더에 정보를 추가, 일관된 응답 처리를 제공합니다.
+
+        CommonResDto resDto
+                = new CommonResDto(HttpStatus.CREATED,
+                "User Created", saved.getName());
+
+        return new ResponseEntity<>(resDto, HttpStatus.CREATED);
+
+
     }
 
 }

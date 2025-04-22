@@ -18,7 +18,7 @@ public class UserService {
 
     // 컨트롤러가 이 메서드를 호출할 것이다.
     // 그리고 지가 전달받은 dto를 그대로 넘길 것이다.
-    public User userCreate(UserSaveReqDto dto) throws Exception {
+    public User userCreate(UserSaveReqDto dto) {
         Optional<User> foundEmail
                 = userRepository.findByEmail(dto.getEmail());
 
