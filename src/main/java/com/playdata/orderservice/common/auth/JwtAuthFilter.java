@@ -38,8 +38,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = parseBearerToken(request);
         System.out.println("token = " + token);
 
-        if (token != null) {
-            try {
+        try {
+            if (token != null) {
+
                 // 토큰이 null이 아니면 이 토큰이 유효한 지를 검사하자.
                 TokenUserInfo userInfo
                         = jwtTokenProvider.validateAndGetTokenUserInfo(token);
@@ -65,18 +66,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 // 인증 정보를 전역적으로 어느 컨테이너, 어느 서비스에서나 활용할 수 있도록 미리 저장.
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
-            } catch (Exception e) {
-                // 토큰 검증 과정에서 문제가 발생한다면 catch문이 실행될거에요.
-                e.printStackTrace();
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.setContentType("application/json");
-                response.getWriter().write("{\"error\":\"invalid_token\"}");
             }
+            // 필터를 통과하는 메서드 (doFilter를 호출하지 않으면 필터 통과가 안됩니다!)
+            // if (token != null) 바깥쪽으로 뺐습니다.
+            // 일단 토큰이 있든 없든 필터를 통과해서 시큐리티한테 검사는 받아야 하니깐...
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            // 토큰 검증 과정에서 문제가 발생한다면 catch문이 실행될거에요.
+            e.printStackTrace();
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\":\"invalid_token\"}");
         }
-        // 필터를 통과하는 메서드 (doFilter를 호출하지 않으면 필터 통과가 안됩니다!)
-        // if (token != null) 바깥쪽으로 뺐습니다.
-        // 일단 토큰이 있든 없든 필터를 통과해서 시큐리티한테 검사는 받아야 하니깐...
-        filterChain.doFilter(request, response);
 
     }
 
