@@ -1,6 +1,7 @@
 package com.playdata.orderservice.user.entity;
 
 import com.playdata.orderservice.common.entity.Address;
+import com.playdata.orderservice.user.dto.UserResDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,6 +35,18 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Builder.Default // builder 패턴 사용해서 객체 초기화 시 초기값으로 세팅
     private Role role =  Role.USER;
+
+    // DTO에 Entity 변환 메서드가 있는 거처럼
+    // Entity에도 응답용 DTO 변환 메서드를 세팅해서 언제든 변환이 자유롭도록 작성.
+    public UserResDto fromEntity() {
+        return UserResDto.builder()
+                .id(id)
+                .name(name)
+                .email(email)
+                .role(role)
+                .address(address)
+                .build();
+    }
 
 }
 
