@@ -62,7 +62,7 @@ public class UserController {
         // 백엔드는 요청이 들어왔을 때 이 사람이 이전에 로그인 성공 한 사람인지 알 수가 없다.
         // 징표를 하나 만들어 주겠다. -> JWT를 발급해서 클라이언트에게 전달해 주겠다!
         String token
-                = jwtTokenProvider.createToken(user.getEmail(), user.getPassword());
+                = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
         CommonResDto resDto
                 = new CommonResDto(HttpStatus.OK,
                 "Login Success", token);
@@ -70,10 +70,11 @@ public class UserController {
     }
 
     // 회원 정보 조회 (마이페이지) -> 로그인 한 회원만이 요청할 수 있습니다.
-//    @GetMapping("/myInfo")
-//    public ResponseEntity<?> getMyInfo() {
-//
-//    }
+    @GetMapping("/myInfo")
+    public ResponseEntity<?> getMyInfo() {
+        System.out.println("/user/myInfo: GET!");
+        return null;
+    }
 
 
 }
