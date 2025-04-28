@@ -12,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -65,6 +62,18 @@ public class ProductContoller {
 
         CommonResDto resDto
                 = new CommonResDto(HttpStatus.OK, "상품 리스트 정상 조회", dtoList);
+
+        return ResponseEntity.ok().body(resDto);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteProduct(@RequestParam("id") Long id) throws Exception {
+        log.info("/product/delete: DELETE, id: {}", id);
+        productService.productDelete(id);
+
+        CommonResDto resDto
+                = new CommonResDto(HttpStatus.OK, "삭제 완료", id);
 
         return ResponseEntity.ok().body(resDto);
     }
